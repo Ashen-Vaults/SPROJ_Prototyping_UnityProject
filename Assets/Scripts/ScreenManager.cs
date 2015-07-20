@@ -121,12 +121,20 @@ public class ScreenManager : MonoBehaviour {
         playerCount--;
     }
 
-
+    /// <summary>
+    /// merges two borders together
+    /// the ccwBorder is kept, all connections to the cwBorder are re-set
+    /// </summary>
+    /// <param name="ccwBorder">the ccw border of the merge, this border remains</param>
+    /// <param name="cwBorder">the cw border of the merge, this border is knocked out</param>
     public void MergeBorders(Border ccwBorder, Border cwBorder)
     {
         Debug.Log("MERGING: " + ccwBorder.transform + " and " + cwBorder.transform);
+
+        // set to the angle between the merged borders
         ccwBorder.SetAngle(ccwBorder.currentAngle - ((ccwBorder.currentAngle - cwBorder.currentAngle) / 2));
 
+        // update screen border for missing one
         foreach (Screen screen in allScreens)
         {
             if (screen.ccwBorder == cwBorder)
@@ -135,7 +143,14 @@ public class ScreenManager : MonoBehaviour {
             }
         }
 
+        // update border list
         allBorders.Remove(cwBorder);
+        
+        // fix border neighbors for the one that's been merged
+        ccwBorder.cwBorder = cwBorder.cwBorder;
+        cwBorder.cwBorder.ccwBorder = ccwBorder;
+        
+        // turn off merged border
         cwBorder.gameObject.SetActive(false);
     }
 
