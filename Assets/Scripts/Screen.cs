@@ -87,15 +87,19 @@ public class Screen : MonoBehaviour {
         ccwTarget = Vector3.Slerp(ccwTarget, ccwBorder.outerPoint.position, Time.deltaTime * screenSpeed);
         cwTarget = Vector3.Slerp(cwTarget, cwBorder.outerPoint.position, Time.deltaTime * screenSpeed);
         
-        // TODO update angle of area
-        currentAngleArea = Vector3.Angle(cwTarget, ccwTarget);
-        
+        // TODO update angle of area (maybe?)
+        //currentAngleArea = Vector3.Angle(cwTarget, ccwTarget);
 
         // knock out screen if area will be <= 0
-        if (currentAngleArea <= 0 && screenManager != null)
+        if (Vector3.Distance(ccwTarget, cwTarget) < screenSpeed * 2)
         {
-            //screenManager.ScreenLose(this);
+            screenManager.ScreenLose(this);
         }
+
+        /*if (currentAngleArea <= 0 && screenManager != null)
+        {
+            screenManager.ScreenLose(this);
+        }*/
     }
 
 
