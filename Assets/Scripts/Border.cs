@@ -14,26 +14,30 @@ public class Border : MonoBehaviour
     public Transform centerPoint;
     public Transform outerPoint;
 
-    // can it move?
-    public bool locked = false;
-
     // adjacent borders
     public Border cwBorder;
     public Border ccwBorder;
 
-    // LineRenderer for debugging 
-    private LineRenderer lr;
+    // DEBUG LineRenderer 
+    //private LineRenderer lr;
+
+
+    public Border(float startingAngle)
+    {
+        this.startingAngle = startingAngle;
+    }
+
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         // find the border points
         centerPoint = transform.Find("centerPoint");
         outerPoint = transform.Find("outerPoint");
 
-        // linerenderer
-        lr = gameObject.GetComponent<LineRenderer>();
-        lr.SetVertexCount(2);
+        // DEBUG linerenderer
+        //lr = gameObject.GetComponent<LineRenderer>();
+        //lr.SetVertexCount(2);
 
         // set initial rotation
         currentAngle = startingAngle;
@@ -41,14 +45,21 @@ public class Border : MonoBehaviour
     }
 
 
+    public void SetAngle(float newAngle)
+    {
+        currentAngle = newAngle;
+        transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.forward);
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        // line renderer
-        lr.SetPosition(0, centerPoint.position);
-        lr.SetPosition(1, outerPoint.position);
+        // DEBUG line renderer
+        //lr.SetPosition(0, centerPoint.position);
+        //lr.SetPosition(1, outerPoint.position);
 
-        // TEMP: debug auto move
+        // DEBUG auto move
         //Move(deltaOverTime);
     }
 
@@ -59,19 +70,14 @@ public class Border : MonoBehaviour
     /// <param name="deltaAngle"> the amount to move the angle by </param>
     public void Move(float deltaAngle)
     {
-        if (locked)
-        {
-            return;
-        }
-
-        Debug.Log(transform.name + " moving " + deltaAngle);
+        //Debug.Log(transform.name + " moving " + deltaAngle);
 
         currentAngle += deltaAngle;
         if (currentAngle < 0)
         {
             currentAngle += 360;
         }
-        else if (currentAngle > 360)
+        else if (currentAngle >= 360)
         {
             currentAngle -= 360;
         }
